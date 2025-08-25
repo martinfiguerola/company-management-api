@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,4 +29,26 @@ public class DepartmentController {
         return responseDTO.map(departmentResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(departmentResponseDTO))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @GetMapping
+    public ResponseEntity<List<DepartmentResponseDTO>> getDepartments () {
+        List<DepartmentResponseDTO> responseDTOS = departmentService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTOS);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DepartmentResponseDTO> getDepartment (@PathVariable Long id) {
+        Optional<DepartmentResponseDTO> dtoOptional = departmentService.findById(id);
+
+        return dtoOptional
+                .map(departmentResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(departmentResponseDTO))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/search/{department-name}")
+    public ResponseEntity<List<DepartmentResponseDTO>> getDepartmentByName (@PathVariable("department-name") String name) {
+        List<DepartmentResponseDTO> responseDTOS = departmentService.findByName(name);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTOS);
+    }
+
 }

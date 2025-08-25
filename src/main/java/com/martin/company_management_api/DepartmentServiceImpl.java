@@ -2,6 +2,7 @@ package com.martin.company_management_api;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,6 +43,33 @@ public class DepartmentServiceImpl implements DepartmentService{
 
             return DepartmentMapperDTO.toDTO(updatedDepartment);
         });
+    }
+
+    @Override
+    public List<DepartmentResponseDTO> findAll() {
+
+        // Obtener la lista de departments desde la base de datos
+        List<Department> departments = departmentRepository.findAll();
+
+        return departments.stream()
+                .map(DepartmentMapperDTO::toDTO)
+                .toList();
+    }
+
+    @Override
+    public Optional<DepartmentResponseDTO> findById(Long id) {
+        // Obtenemos un optional con el valor
+        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+
+        return optionalDepartment.map(DepartmentMapperDTO::toDTO);
+    }
+
+    @Override
+    public List<DepartmentResponseDTO> findByName(String name) {
+        List<Department> departments = departmentRepository.findByNameContainingIgnoreCase(name);
+        return departments.stream()
+                .map(DepartmentMapperDTO::toDTO)
+                .toList();
     }
 
 }
