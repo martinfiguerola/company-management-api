@@ -1,5 +1,7 @@
 package com.martin.company_management_api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,14 +48,15 @@ public class DepartmentServiceImpl implements DepartmentService{
     }
 
     @Override
-    public List<DepartmentResponseDTO> findAll() {
+    public Page<DepartmentResponseDTO> findAll(Pageable pageable) {
 
         // Obtener la lista de departments desde la base de datos
-        List<Department> departments = departmentRepository.findAll();
+        Page<Department> departments = departmentRepository.findAll(pageable);
 
-        return departments.stream()
-                .map(DepartmentMapperDTO::toDTO)
-                .toList();
+        Page<DepartmentResponseDTO> responseDTOPage = departments.map(DepartmentMapperDTO::toDTO);
+
+        return responseDTOPage;
+
     }
 
     @Override
@@ -70,6 +73,18 @@ public class DepartmentServiceImpl implements DepartmentService{
         return departments.stream()
                 .map(DepartmentMapperDTO::toDTO)
                 .toList();
+    }
+
+    @Override
+    public Boolean deleteById(Long id) {
+        // Obtener el department que se quiere eliminar
+        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+
+        // Si existe lo eliminamos y devolvemos un boolean true, sino false
+        return optionalDepartment.map(department -> {
+            departmentRepository.delete(department);
+            return true;
+        }).orElse(false);
     }
 
 }

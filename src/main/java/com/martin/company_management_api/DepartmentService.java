@@ -1,5 +1,8 @@
 package com.martin.company_management_api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -7,8 +10,9 @@ public interface DepartmentService {
 
     DepartmentResponseDTO save (DepartmentRequestDTO departmentRequestDTO);
     Optional<DepartmentResponseDTO> update (Long id, DepartmentRequestDTO departmentRequestDTO);
-    List<DepartmentResponseDTO> findAll ();
+    Page<DepartmentResponseDTO> findAll (Pageable pageable);
     Optional<DepartmentResponseDTO> findById (Long id);
     List<DepartmentResponseDTO> findByName (String name);
+    Boolean deleteById (Long id);
 
 }
