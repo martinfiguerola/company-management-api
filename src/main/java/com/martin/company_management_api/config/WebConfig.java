@@ -1,4 +1,4 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;

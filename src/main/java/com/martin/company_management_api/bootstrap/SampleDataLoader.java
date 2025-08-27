@@ -1,6 +1,8 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.bootstrap;
 
 import com.github.javafaker.Faker;
+import com.martin.company_management_api.department.model.Department;
+import com.martin.company_management_api.department.repository.DepartmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

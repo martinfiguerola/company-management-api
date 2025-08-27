@@ -1,4 +1,4 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

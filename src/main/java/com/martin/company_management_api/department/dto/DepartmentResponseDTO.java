@@ -1,4 +1,4 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.department.dto;
 
 import lombok.Getter;
 import lombok.Setter;

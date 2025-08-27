@@ -1,5 +1,10 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.department.service;
 
+import com.martin.company_management_api.department.mapper.DepartmentMapperDTO;
+import com.martin.company_management_api.department.dto.DepartmentRequestDTO;
+import com.martin.company_management_api.department.dto.DepartmentResponseDTO;
+import com.martin.company_management_api.department.model.Department;
+import com.martin.company_management_api.department.repository.DepartmentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DepartmentServiceImpl implements DepartmentService{
+public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
 
@@ -18,13 +23,11 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     @Override
     public DepartmentResponseDTO save(DepartmentRequestDTO departmentRequestDTO) {
-        // Convertir el DTO recibido a una entidad departamento
+        // Converts the provided DepartmentRequestDTO into a Department entity
         Department departmentEntity = DepartmentMapperDTO.fromDTO(departmentRequestDTO);
-
-        // Persistir la entidad en la base de datos
         Department savedDepartment = departmentRepository.save(departmentEntity);
 
-        // Convertir la entidad guardada a DTO y devolverla para la respuesta
+        // Convert the saved entity into a DTO and return it as the response
         return DepartmentMapperDTO.toDTO(savedDepartment);
 
     }
@@ -32,12 +35,11 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Override
     public Optional<DepartmentResponseDTO> update(Long id, DepartmentRequestDTO departmentRequestDTO) {
 
-        // Primero verificamos que el department exista
+        // Verify that the department exists
         Optional<Department> optionalDepartment = departmentRepository.findById(id);
 
-        // Si existe lo actualizamos, sino devolvemos un empty optional
+        // If the department exists, update it; otherwise return an empty Optional
         return optionalDepartment.map(department -> {
-
             department.setName(departmentRequestDTO.getName());
             department.setLocation(departmentRequestDTO.getLocation());
 
@@ -49,21 +51,20 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     @Override
     public Page<DepartmentResponseDTO> findAll(Pageable pageable) {
+        // Retrieves all departments in a paginated format and maps them to response DTOs.
 
-        // Obtener la lista de departments desde la base de datos
+        // Fetch a paginated list of Department entities from the database
         Page<Department> departments = departmentRepository.findAll(pageable);
+        // Convert each Department entity to a DepartmentResponseDTO
+        return departments.map(DepartmentMapperDTO::toDTO);
 
-        Page<DepartmentResponseDTO> responseDTOPage = departments.map(DepartmentMapperDTO::toDTO);
 
-        return responseDTOPage;
 
     }
 
     @Override
     public Optional<DepartmentResponseDTO> findById(Long id) {
-        // Obtenemos un optional con el valor
         Optional<Department> optionalDepartment = departmentRepository.findById(id);
-
         return optionalDepartment.map(DepartmentMapperDTO::toDTO);
     }
 
@@ -77,10 +78,8 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     @Override
     public Boolean deleteById(Long id) {
-        // Obtener el department que se quiere eliminar
         Optional<Department> optionalDepartment = departmentRepository.findById(id);
 
-        // Si existe lo eliminamos y devolvemos un boolean true, sino false
         return optionalDepartment.map(department -> {
             departmentRepository.delete(department);
             return true;

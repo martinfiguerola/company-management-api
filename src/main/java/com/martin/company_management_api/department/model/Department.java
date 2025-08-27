@@ -1,4 +1,4 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.department.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

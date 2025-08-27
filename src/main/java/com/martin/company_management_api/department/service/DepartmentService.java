@@ -1,5 +1,7 @@
-package com.martin.company_management_api;
+package com.martin.company_management_api.department.service;
 
+import com.martin.company_management_api.department.dto.DepartmentRequestDTO;
+import com.martin.company_management_api.department.dto.DepartmentResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
