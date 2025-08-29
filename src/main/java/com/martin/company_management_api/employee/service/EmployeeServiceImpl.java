@@ -8,6 +8,7 @@ import com.martin.company_management_api.employee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         this.employeeRepository = employeeRepository;
     }
 
-
+    @Transactional(readOnly = true)
     @Override
     public Page<EmployeeResponseDTO> findAll(Pageable pageable) {
 
@@ -30,6 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         return employeePage.map(EmployeeMapperDTO::toDTO); // Return the employees dto page
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<EmployeeResponseDTO> findById(Long id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
@@ -37,6 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         return optionalEmployee.map(EmployeeMapperDTO::toDTO);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<EmployeeResponseDTO> findByName(String firstname) {
         List<Employee> employees = employeeRepository.findByFirstnameContainingIgnoreCase(firstname);
@@ -46,6 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .toList();
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(Long id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
@@ -56,6 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         }).orElse(false);
     }
 
+    @Transactional
     @Override
     public EmployeeResponseDTO save(EmployeeRequestDTO employeeRequestDTO) {
         Employee employee = EmployeeMapperDTO.fromDTO(employeeRequestDTO);
@@ -66,6 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     }
 
+    @Transactional
     @Override
     public Optional<EmployeeResponseDTO> update(Long id, EmployeeRequestDTO employeeRequestDTO) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);

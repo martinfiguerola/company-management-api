@@ -3,6 +3,7 @@ package com.martin.company_management_api.employee.controller;
 import com.martin.company_management_api.employee.dto.EmployeeRequestDTO;
 import com.martin.company_management_api.employee.dto.EmployeeResponseDTO;
 import com.martin.company_management_api.employee.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -49,13 +50,13 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeResponseDTO> createEmployee (@RequestBody EmployeeRequestDTO employeeRequestDTO) {
+    public ResponseEntity<EmployeeResponseDTO> createEmployee (@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
         EmployeeResponseDTO responseDTO = employeeService.save(employeeRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<EmployeeResponseDTO> updateEmployee (@PathVariable Long id, @RequestBody EmployeeRequestDTO employeeRequestDTO) {
+    public ResponseEntity<EmployeeResponseDTO> updateEmployee (@PathVariable Long id, @Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
         Optional<EmployeeResponseDTO> optionalEmployeeResponseDTO = employeeService.update(id, employeeRequestDTO);
         return optionalEmployeeResponseDTO
                 .map(employeeResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(employeeResponseDTO))
