@@ -1,5 +1,6 @@
 package com.martin.company_management_api.employee.service;
 
+import com.martin.company_management_api.employee.dto.EmployeeRequestDTO;
 import com.martin.company_management_api.employee.dto.EmployeeResponseDTO;
 import com.martin.company_management_api.employee.mapper.EmployeeMapperDTO;
 import com.martin.company_management_api.employee.model.Employee;
@@ -7,6 +8,9 @@ import com.martin.company_management_api.employee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
@@ -25,4 +29,57 @@ public class EmployeeServiceImpl implements EmployeeService{
 
         return employeePage.map(EmployeeMapperDTO::toDTO); // Return the employees dto page
     }
+
+    @Override
+    public Optional<EmployeeResponseDTO> findById(Long id) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+
+        return optionalEmployee.map(EmployeeMapperDTO::toDTO);
+    }
+
+    @Override
+    public List<EmployeeResponseDTO> findByName(String firstname) {
+        List<Employee> employees = employeeRepository.findByFirstnameContainingIgnoreCase(firstname);
+
+        return employees.stream()
+                .map(EmployeeMapperDTO::toDTO)
+                .toList();
+    }
+
+    @Override
+    public Boolean deleteById(Long id) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+
+        return optionalEmployee.map(employee -> {
+            employeeRepository.delete(employee);
+            return true;
+        }).orElse(false);
+    }
+
+    @Override
+    public EmployeeResponseDTO save(EmployeeRequestDTO employeeRequestDTO) {
+        Employee employee = EmployeeMapperDTO.fromDTO(employeeRequestDTO);
+
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        return EmployeeMapperDTO.toDTO(savedEmployee);
+
+    }
+
+    @Override
+    public Optional<EmployeeResponseDTO> update(Long id, EmployeeRequestDTO employeeRequestDTO) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+
+        return optionalEmployee.map(employee -> {
+            employee.setFirstname(employeeRequestDTO.getFirstname());
+            employee.setLastname(employeeRequestDTO.getLastname());
+            employee.setEmail(employeeRequestDTO.getEmail());
+
+            Employee updatedEmployee = employeeRepository.save(employee);
+
+            return EmployeeMapperDTO.toDTO(updatedEmployee);
+        });
+    }
+
+
 }
