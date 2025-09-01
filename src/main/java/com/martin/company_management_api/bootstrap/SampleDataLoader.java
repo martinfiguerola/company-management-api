@@ -1,6 +1,8 @@
 package com.martin.company_management_api.bootstrap;
 
 import com.github.javafaker.Faker;
+import com.martin.company_management_api.address.model.Address;
+import com.martin.company_management_api.address.repository.AddressRepository;
 import com.martin.company_management_api.department.model.Department;
 import com.martin.company_management_api.department.repository.DepartmentRepository;
 import com.martin.company_management_api.employee.model.Employee;
@@ -19,11 +21,13 @@ public class SampleDataLoader implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(SampleDataLoader.class);
     private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
+    private final AddressRepository addressRepository;
     private final Faker faker;
 
-    public SampleDataLoader(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository) {
+    public SampleDataLoader(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository, AddressRepository addressRepository) {
         this.departmentRepository = departmentRepository;
         this.employeeRepository = employeeRepository;
+        this.addressRepository = addressRepository;
         this.faker = new Faker();
     }
 
@@ -67,6 +71,29 @@ public class SampleDataLoader implements CommandLineRunner {
 
             // Log created employee to confirm seeding worked
             logger.info("Seeded {} employees.", employees.size());
+
+
+
+        }
+
+        if (addressRepository.count() == 0) {
+
+            List<Address> addresses = new ArrayList<>();
+
+            for (int i = 0; i < 40; i++){
+                Address address = new Address();
+                address.setStreet(faker.address().streetAddress());
+                address.setCity(faker.address().city());
+                address.setState(faker.address().state());
+                address.setZipcode(faker.address().zipCode());
+
+                addresses.add(address);
+            }
+
+            addressRepository.saveAll(addresses);
+
+            // Log created employee to confirm seeding worked
+            logger.info("Seeded {} address.", addresses.size());
 
 
 
