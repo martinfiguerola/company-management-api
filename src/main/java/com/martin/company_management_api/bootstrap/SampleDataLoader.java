@@ -35,67 +35,61 @@ public class SampleDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (departmentRepository.count() == 0 ){
+        if (employeeRepository.count() == 0 ){
 
-            List<Department> departments = new ArrayList<>();
+            // 1. Create and save some departments
+            Department it = new Department();
+            it.setName("IT");
+            it.setLocation("1st Floor");
 
-            for (int i = 0; i < 40; i++) {
-                Department department = new Department();
-                department.setName(faker.name().fullName());
-                department.setLocation(faker.number().numberBetween(1, 10) + "° Floor");
+            Department hr = new Department();
+            hr.setName("HR");
+            hr.setLocation("2nd Floor");
 
-                departments.add(department);
-            }
+            Department finance = new Department();
+            finance.setName("Finance");
+            finance.setLocation("3rd Floor");
 
+            List<Department> departments = List.of(it, hr, finance);
+
+            // Save departments first
             departmentRepository.saveAll(departments);
 
-            // Log created department to confirm seeding worked
-            logger.info("Seeded {} departments.", departments.size());
+            // 2. Create 40 employees and assign them to a random department
+            for (int i = 0; i < 40; i++) {
 
-        }
-
-        if (employeeRepository.count() == 0) {
-
-            List<Employee> employees = new ArrayList<>();
-
-            for (int i = 0; i < 40; i++){
                 Employee employee = new Employee();
                 employee.setFirstname(faker.name().firstName());
                 employee.setLastname(faker.name().lastName());
                 employee.setEmail(faker.internet().emailAddress());
 
-                employees.add(employee);
-            }
+                // assign a random department
+                Department randomDepartment = departments.get(faker.number().numberBetween(0, departments.size()));
+                employee.setDepartment(randomDepartment);
 
-            employeeRepository.saveAll(employees);
-
-            // Log created employee to confirm seeding worked
-            logger.info("Seeded {} employees.", employees.size());
-
-
-
-        }
-
-        if (addressRepository.count() == 0) {
-
-            List<Address> addresses = new ArrayList<>();
-
-            for (int i = 0; i < 40; i++){
+                // 3. Create Address
                 Address address = new Address();
                 address.setStreet(faker.address().streetAddress());
                 address.setCity(faker.address().city());
                 address.setState(faker.address().state());
                 address.setZipcode(faker.address().zipCode());
 
-                addresses.add(address);
+                // Set bidirectionality
+                employee.setAddress(address);
+                address.setEmployee(employee);
+
+                // 4. Add to department
+                randomDepartment.getEmployees().add(employee);
+                employeeRepository.save(employee);
+
+                // 5. Save departments → employees and addresses are saved by cascade
+                departmentRepository.saveAll(departments);
+
+                // Log created department to confirm seeding worked
+                logger.info("Seeded {} employees across {} departments.",
+                        40, departments.size());
+
             }
-
-            addressRepository.saveAll(addresses);
-
-            // Log created employee to confirm seeding worked
-            logger.info("Seeded {} address.", addresses.size());
-
-
 
         }
     }
