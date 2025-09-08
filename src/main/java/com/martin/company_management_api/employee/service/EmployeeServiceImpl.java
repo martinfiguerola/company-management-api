@@ -1,5 +1,6 @@
 package com.martin.company_management_api.employee.service;
 
+import com.martin.company_management_api.employee.dto.EmployeeDetailDTO;
 import com.martin.company_management_api.employee.dto.EmployeeRequestDTO;
 import com.martin.company_management_api.employee.dto.EmployeeResponseDTO;
 import com.martin.company_management_api.employee.mapper.EmployeeMapperDTO;
@@ -33,10 +34,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<EmployeeResponseDTO> findById(Long id) {
+    public Optional<EmployeeDetailDTO> findById(Long id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
-        return optionalEmployee.map(EmployeeMapperDTO::toDTO);
+        // Convert the optionalEmployee to employeeDTO with departmentRef and addressRef
+        return optionalEmployee.map(EmployeeMapperDTO::toEmployeeDetailDTO);
     }
 
     @Transactional(readOnly = true)

@@ -1,5 +1,6 @@
 package com.martin.company_management_api.department.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.martin.company_management_api.employee.model.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,5 +28,6 @@ public class Department {
             mappedBy = "department",
             cascade = CascadeType.ALL
     )
+    @JsonManagedReference
     private List<Employee> employees = new ArrayList<>();
 }

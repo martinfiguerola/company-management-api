@@ -1,5 +1,6 @@
 package com.martin.company_management_api.address.mapper;
 
+import com.martin.company_management_api.address.dto.AddressRefDTO;
 import com.martin.company_management_api.address.dto.AddressRequestDTO;
 import com.martin.company_management_api.address.dto.AddressResponseDTO;
 import com.martin.company_management_api.address.model.Address;
@@ -26,5 +27,12 @@ public class AddressMapperDTO {
         addressResponseDTO.setZipcode(address.getZipcode());
 
         return addressResponseDTO;
+    }
+
+    public static AddressRefDTO addressRefDTO (Address address) {
+        AddressRefDTO addressRefDTO = new AddressRefDTO();
+        addressRefDTO.setId(address.getId());
+        addressRefDTO.setStreet(address.getStreet());
+        return addressRefDTO;
     }
 }
