@@ -1,5 +1,6 @@
 package com.martin.company_management_api.employee.controller;
 
+import com.martin.company_management_api.employee.dto.EmployeeDetailDTO;
 import com.martin.company_management_api.employee.dto.EmployeeRequestDTO;
 import com.martin.company_management_api.employee.dto.EmployeeResponseDTO;
 import com.martin.company_management_api.employee.service.EmployeeService;
@@ -29,11 +30,11 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTOPage);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<EmployeeResponseDTO> getEmployee (@PathVariable Long id) {
-        Optional<EmployeeResponseDTO> responseDTOOptional = employeeService.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDetailDTO> getEmployee (@PathVariable Long id) {
+        Optional<EmployeeDetailDTO> responseDTOOptional = employeeService.findById(id);
 
-        return responseDTOOptional.map(employeeResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(employeeResponseDTO))
+        return responseDTOOptional.map(employeeDetailDTO -> ResponseEntity.status(HttpStatus.OK).body(employeeDetailDTO))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
@@ -51,6 +52,7 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> createEmployee (@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
+        System.out.println("--- EN CONTROLLER ---");
         EmployeeResponseDTO responseDTO = employeeService.save(employeeRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }

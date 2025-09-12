@@ -8,6 +8,7 @@ import com.martin.company_management_api.department.repository.DepartmentReposit
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         this.departmentRepository = departmentRepository;
     }
 
+    @Transactional
     @Override
     public DepartmentResponseDTO save(DepartmentRequestDTO departmentRequestDTO) {
         // Converts the provided DepartmentRequestDTO into a Department entity
@@ -32,6 +34,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     }
 
+    @Transactional
     @Override
     public Optional<DepartmentResponseDTO> update(Long id, DepartmentRequestDTO departmentRequestDTO) {
 
@@ -49,6 +52,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         });
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<DepartmentResponseDTO> findAll(Pageable pageable) {
         // Retrieves all departments in a paginated format and maps them to response DTOs.
@@ -62,12 +66,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<DepartmentResponseDTO> findById(Long id) {
         Optional<Department> optionalDepartment = departmentRepository.findById(id);
         return optionalDepartment.map(DepartmentMapperDTO::toDTO);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<DepartmentResponseDTO> findByName(String name) {
         List<Department> departments = departmentRepository.findByNameContainingIgnoreCase(name);
@@ -76,6 +82,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public Boolean deleteById(Long id) {
         Optional<Department> optionalDepartment = departmentRepository.findById(id);

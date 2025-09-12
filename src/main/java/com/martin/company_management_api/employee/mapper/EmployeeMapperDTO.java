@@ -1,10 +1,30 @@
 package com.martin.company_management_api.employee.mapper;
 
+import com.martin.company_management_api.department.dto.DepartmentRefDTO;
+import com.martin.company_management_api.department.mapper.DepartmentMapperDTO;
+import com.martin.company_management_api.department.model.Department;
+import com.martin.company_management_api.employee.dto.EmployeeDetailDTO;
+import com.martin.company_management_api.employee.dto.EmployeeRefDTO;
 import com.martin.company_management_api.employee.dto.EmployeeRequestDTO;
 import com.martin.company_management_api.employee.dto.EmployeeResponseDTO;
 import com.martin.company_management_api.employee.model.Employee;
 
 public class EmployeeMapperDTO {
+
+    public static EmployeeDetailDTO toEmployeeDetailDTO (Employee employee) {
+        EmployeeDetailDTO employeeDetailDTO = new EmployeeDetailDTO();
+        employeeDetailDTO.setId(employee.getId());
+        employeeDetailDTO.setFirstname(employee.getFirstname());
+        employeeDetailDTO.setLastname(employee.getLastname());
+        employeeDetailDTO.setEmail(employee.getEmail());
+
+        Department department = employee.getDepartment();
+        DepartmentRefDTO departmentRefDTO = DepartmentMapperDTO.departmentRefDTO(department);
+
+        employeeDetailDTO.setDepartment(departmentRefDTO);
+
+        return employeeDetailDTO;
+    }
 
     public static EmployeeResponseDTO toDTO (Employee employee) {
 
@@ -26,5 +46,14 @@ public class EmployeeMapperDTO {
         employee.setEmail(employeeRequestDTO.getEmail());
 
         return employee;
+    }
+
+    public static EmployeeRefDTO employeeRefDTO (Employee employee) {
+        EmployeeRefDTO employeeRefDTO = new EmployeeRefDTO();
+
+        employeeRefDTO.setId(employee.getId());
+        employeeRefDTO.setFirstname(employee.getFirstname());
+
+        return employeeRefDTO;
     }
 }

@@ -1,5 +1,8 @@
 package com.martin.company_management_api.employee.service;
 
+import com.martin.company_management_api.department.model.Department;
+import com.martin.company_management_api.department.repository.DepartmentRepository;
+import com.martin.company_management_api.employee.dto.EmployeeDetailDTO;
 import com.martin.company_management_api.employee.dto.EmployeeRequestDTO;
 import com.martin.company_management_api.employee.dto.EmployeeResponseDTO;
 import com.martin.company_management_api.employee.mapper.EmployeeMapperDTO;
@@ -17,9 +20,11 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService{
 
     private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository) {
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -33,10 +38,11 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<EmployeeResponseDTO> findById(Long id) {
+    public Optional<EmployeeDetailDTO> findById(Long id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
-        return optionalEmployee.map(EmployeeMapperDTO::toDTO);
+        // Convert the optionalEmployee to employeeDTO with departmentRef and addressRef
+        return optionalEmployee.map(EmployeeMapperDTO::toEmployeeDetailDTO);
     }
 
     @Transactional(readOnly = true)
@@ -63,7 +69,14 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Transactional
     @Override
     public EmployeeResponseDTO save(EmployeeRequestDTO employeeRequestDTO) {
+        Long departmentId = employeeRequestDTO.getDepartment();
+
         Employee employee = EmployeeMapperDTO.fromDTO(employeeRequestDTO);
+
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department with: " + departmentId + " does not exist."));
+
+        employee.setDepartment(department);
 
         Employee savedEmployee = employeeRepository.save(employee);
 

@@ -1,5 +1,8 @@
 package com.martin.company_management_api.employee.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.martin.company_management_api.address.model.Address;
+import com.martin.company_management_api.department.model.Department;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +23,15 @@ public class Employee {
     private String lastname;
     @Column(unique = true)
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    @JsonBackReference
+    private Department department;
+
+    @OneToOne(
+            mappedBy = "employee",
+            cascade = CascadeType.ALL
+    )
+    private Address address;
 }

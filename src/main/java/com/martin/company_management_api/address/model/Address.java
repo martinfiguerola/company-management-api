@@ -1,5 +1,5 @@
 package com.martin.company_management_api.address.model;
-
+import com.martin.company_management_api.employee.model.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +18,8 @@ public class Address {
     private String city;
     private String state;
     private String zipcode;
+
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }
