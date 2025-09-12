@@ -1,5 +1,6 @@
 package com.martin.company_management_api.employee.dto;
 
+import com.martin.company_management_api.department.model.Department;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -22,4 +23,6 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email must be a valid format")
     private String email;
+
+    private Long department;
 }

@@ -57,33 +57,33 @@ public class SampleDataLoader implements CommandLineRunner {
 
             // 2. Create 40 employees and assign them to a random department
             for (int i = 0; i < 40; i++) {
-
+                // A) Create the Employee first
                 Employee employee = new Employee();
                 employee.setFirstname(faker.name().firstName());
                 employee.setLastname(faker.name().lastName());
                 employee.setEmail(faker.internet().emailAddress());
 
-                // assign a random department
-                Department randomDepartment = departments.get(faker.number().numberBetween(0, departments.size()));
-                employee.setDepartment(randomDepartment);
-
-                // 3. Create Address
+                // B) Create the Address
                 Address address = new Address();
                 address.setStreet(faker.address().streetAddress());
                 address.setCity(faker.address().city());
                 address.setState(faker.address().state());
                 address.setZipcode(faker.address().zipCode());
 
-                // Set bidirectionality
+                // C) Link the entities bidirectionally
                 employee.setAddress(address);
                 address.setEmployee(employee);
 
-                // 4. Add to department
-                randomDepartment.getEmployees().add(employee);
-                employeeRepository.save(employee);
+                // D) Set the random department
+                Department randomDepartment = departments.get(faker.number().numberBetween(0, departments.size()));
+                employee.setDepartment(randomDepartment);
 
-                // 5. Save departments → employees and addresses are saved by cascade
-                departmentRepository.saveAll(departments);
+                // E) Keep bidirectional consistency on the Department side
+                randomDepartment.getEmployees().add(employee);
+
+                // F) Save the Employee. This action, due to CascadeType.ALL on the Department side,
+                // will also save the related entities (Employee and Address) automatically.
+                employeeRepository.save(employee);
 
                 // Log created department to confirm seeding worked
                 logger.info("Seeded {} employees across {} departments.",

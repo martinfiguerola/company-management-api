@@ -1,6 +1,4 @@
 package com.martin.company_management_api.address.model;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.martin.company_management_api.employee.model.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,6 +21,5 @@ public class Address {
 
     @OneToOne
     @JoinColumn(name = "employee_id")
-    @JsonBackReference
     private Employee employee;
 }

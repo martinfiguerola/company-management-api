@@ -52,6 +52,7 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> createEmployee (@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
+        System.out.println("--- EN CONTROLLER ---");
         EmployeeResponseDTO responseDTO = employeeService.save(employeeRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }

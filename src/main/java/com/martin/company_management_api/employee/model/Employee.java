@@ -33,6 +33,5 @@ public class Employee {
             mappedBy = "employee",
             cascade = CascadeType.ALL
     )
-    @JsonBackReference
     private Address address;
 }

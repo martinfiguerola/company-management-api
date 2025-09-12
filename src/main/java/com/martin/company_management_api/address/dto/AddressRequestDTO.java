@@ -1,5 +1,6 @@
 package com.martin.company_management_api.address.dto;
 
+import com.martin.company_management_api.employee.model.Employee;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,4 +18,6 @@ public class AddressRequestDTO {
     private String state;
     @NotBlank(message = "Zipcode name cannot be empty")
     private String zipcode;
+
+    private Long employee;
 }

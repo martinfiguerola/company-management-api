@@ -1,5 +1,6 @@
 package com.martin.company_management_api.address.controller;
 
+import com.martin.company_management_api.address.dto.AddressDetailDTO;
 import com.martin.company_management_api.address.dto.AddressRequestDTO;
 import com.martin.company_management_api.address.dto.AddressResponseDTO;
 import com.martin.company_management_api.address.service.AddressService;
@@ -29,10 +30,10 @@ public class AddressController{
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressResponseDTO> getAddress (@PathVariable Long id) {
-        Optional<AddressResponseDTO> responseDTOOptional = addressService.findById(id);
+    public ResponseEntity<AddressDetailDTO> getAddress (@PathVariable Long id) {
+        Optional<AddressDetailDTO> dtoOptional = addressService.findById(id);
 
-        return responseDTOOptional.map(addressResponseDTO -> ResponseEntity.status(HttpStatus.OK).body(addressResponseDTO))
+        return dtoOptional.map(addressDetailDTO -> ResponseEntity.status(HttpStatus.OK).body(addressDetailDTO))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
